@@ -1,0 +1,143 @@
+<!CODETYPE html>
+
+<html>
+    <head>
+        <title>Probabilites</title>
+        <!-- The goal of this project is to create a little game to show people how low the odds are for having 
+        a serious reaction to COVID19 Vaccination. The idea is to have a random number generated when one navigates to the page
+        this is the user number. There will be an array with other numbers set for things such as contracting covid after vaccination,
+        dying from covid without vaccination, having serious allergic reaction after vaccination.
+        -->
+    <style>
+        .mainContainer{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        #userNumberOfClicks {
+            border-style: solid;
+            width: 100px;
+            height: 100px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #textBox{
+            border-style: solid;
+            width: 400px;
+            height: 100px;
+            text-align: center;
+        }
+    </style>
+    </head>
+
+
+    <body>
+        <!--<button onclick="buttonNumber = randomNumberGenerator(buttonNumber); console.log(buttonNumber);">Your Fate</button>-->
+        <div class="mainContainer">
+            <h1>Hotdog Dating Simulator</h1>
+            <button onclick="userClick()">hotdog!</button>
+            <div id="userNumberOfClicks"></div>
+            <div id="textBox"> hello </div>
+        </div>
+
+    </body>
+
+    <script>
+        let buttonNumber = ""
+        let covidDeath = 1;
+        let seriousReaction = 2;
+        let clickCount = 0;
+        let placeHolderForResult = "";
+
+        var redWelts = {
+            chance: .002,
+            textOutPut: "After recieving the vaccination you had red welts on face and lips"
+        };
+        var unvaccinatedDeath = {
+            chance: .304,
+            textOutPut: "You passed away as an unvaccinated indvidual"
+        }
+        var nothingHappened = {
+            chance: .8,
+            textOutPut: "nothing happened" 
+        }
+
+        var possibleEvents = [redWelts, unvaccinatedDeath, nothingHappened];
+
+        function userClick(){
+            buttonNumber = randomNumberGenerator(buttonNumber);
+            covidDeath = userClickCounterTextGenerator();
+
+            if (buttonNumber < .002){
+                //console.log("after recieving the vaccination you had a rash");
+                placeHolderForResult = "After recieving the vaccination you had red welts on face and lips"
+                placeHolderForResult = resultOfUserClick(placeHolderForResult);
+                return;
+            }
+            if (buttonNumber < .004){
+                placeHolderForResult = "After recieving the vaccination you had a rash"
+                placeHolderForResult = resultOfUserClick(placeHolderForResult);
+                return;
+            }
+            if (buttonNumber < .011){
+                placeHolderForResult = "After recieving the vaccination you had a swollen armpit glands"
+                placeHolderForResult = resultOfUserClick(placeHolderForResult);
+                return;
+            }
+            if (buttonNumber < .125){
+                placeHolderForResult = "You passed away as a fully vaccinated indvidual"
+                placeHolderForResult = resultOfUserClick(placeHolderForResult);
+                return;
+            }
+            if (buttonNumber < .304){
+                placeHolderForResult = "You passed away as an unvaccinated indvidual"
+                placeHolderForResult = resultOfUserClick(placeHolderForResult);
+                return;
+            }
+            else {
+                placeHolderForResult = "nothing happened"
+                placeHolderForResult = resultOfUserClick(placeHolderForResult);
+                //console.log("nothing happened");
+                //nothingHappened = "nothing happened"
+            }
+        }   
+        
+        function resultOfUserClick(textBoxContent){
+            //console.log(textBoxContent);
+            const element = document.getElementById("textBox");
+            element.innerHTML = textBoxContent;
+
+        }
+
+        function userClickCounterTextGenerator(){
+            clickCount= clickCount + 1;
+            const element = document.getElementById("userNumberOfClicks");
+            element.innerHTML = clickCount;
+            console.log("you have clicked " + clickCount);
+            console.log("your random number is " + buttonNumber);
+
+        }
+
+        function randomNumberGenerator(generatedNumber){
+
+            var threeDecimal = 1000; 
+            var generatedNumber = Math.floor(Math.random() * ( 1 * threeDecimal)) / (1*threeDecimal);
+            //generatedNumber = Math.floor(Math.random() * 1000000000000) + 1;
+        
+
+            return generatedNumber;
+               
+        } 
+
+        //buttonNumber = randomNumberGenerator(buttonNumber)
+        //console.log(buttonNumber);
+    </script>
+</html>
