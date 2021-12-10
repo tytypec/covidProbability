@@ -11,29 +11,83 @@
     <style>
         .mainContainer{
             display: flex;
+            height: 100%;
             flex-direction: column;
             align-items: center;
+            background-color: rgb(126, 149, 214);
         }
 
         button {
-            width: 100px;
-            height: 100px;
+            width: 150px;
+            height: 150px;
             margin-top: 20px;
             margin-bottom: 20px;
+            border-style: solid;
+            border-color: black;
+            border-radius: 60%;
+            font-size: 22px;
+            font-weight: bold;
+            background-color: rgb(47, 96, 170);
+        }
+        .howManyClicksText{
+            font-size: 32px;
         }
         #userNumberOfClicks {
             border-style: solid;
-            width: 100px;
+            width: 200px;
             height: 100px;
-            margin-top: 20px;
+            margin-top: 5px;
             margin-bottom: 20px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 100px; 
+            font-size: 32px;
+            font-weight: bold;
+            border-radius: 15%;
+            background-color: rgba(180, 188, 197, 0.377);
         }
 
         #textBox{
+            overflow-wrap: normal;
+            font-size: 28px;
             border-style: solid;
-            width: 400px;
+            width: 500px;
             height: 100px;
-            text-align: center;
+            display: flex;
+            padding: 10 10 0 20;
+            justify-content: center;
+            align-items: center; 
+            background-color: rgba(180, 188, 197, 0.377);
+        }
+        .counterContainer{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-style: solid;
+            width: 800px;
+            height: 200px;
+            margin-top: 25px;
+            background-color: rgba(180, 188, 197, 0.377);
+        }
+        #timesNothingHappened{
+            border-style: solid;
+            width: 180px;
+            height: 80px;
+        }
+        #timesSlightReaction{
+            border-style: solid;
+            width: 80px;
+            height: 80px; 
+        }
+        #timesYouDied{
+            border-style: solid;
+            width: 80px;
+            height: 80px; 
+        }
+        #timesSeriousReaction{
+            border-style: solid;
+            width: 80px;
+            height: 80px; 
         }
     </style>
     </head>
@@ -43,9 +97,18 @@
         <!--<button onclick="buttonNumber = randomNumberGenerator(buttonNumber); console.log(buttonNumber);">Your Fate</button>-->
         <div class="mainContainer">
             <h1>Hotdog Dating Simulator</h1>
-            <button onclick="userClick()">hotdog!</button>
+            <button onclick="userClick()">Get Your Shot</button>
+            <div class="howManyClicksText">Click Count:</div>
+            <button onclick="runTest()">Test</button>
             <div id="userNumberOfClicks"></div>
             <div id="textBox"> hello </div>
+            
+            <div class="counterContainer">
+                <div id="timesNothingHappened"> </div>
+                <div id="timesSlightReaction"> </div>
+                <div id="timesYouDied"> </div>
+                <div id="timesSeriousReaction"></div>
+            </div> 
         </div>
 
     </body>
@@ -53,90 +116,125 @@
     <script>
         let buttonNumber = ""
         let covidDeath = 1;
-        let seriousReaction = 2;
         let clickCount = 0;
         let placeHolderForResult = "";
+        let deathCount = 0;
+        let slightReaction = 0;
+        let seriousReaction = 0;
+        let nothingCount = 0;
+        
 
         var redWelts = {
             chance: .002,
-            textOutPut: "After recieving the vaccination you had red welts on face and lips"
-        };
+            textOutPut: "After recieving the vaccination you had red welts on face and lips, this is considered a serious reaction."
+        }
+        var skinBurn = {
+            chance: .007,
+            textOutPut: "After recieving the vaccination you had a burning sensation, this is considered a serious reaction."
+        }
+        var feverChills = {
+            chance: .025,
+            textOutPut: "After recieving the vaccination you had fever and chills." 
+        }
+        var headache = {
+            chance: .078,
+            textOutPut: "After recieving the vaccination you had a slight headache." 
+        }
         var unvaccinatedDeath = {
             chance: .304,
-            textOutPut: "You passed away as an unvaccinated indvidual"
+            textOutPut: "You passed away as an unvaccinated indvidual."
         }
         var nothingHappened = {
-            chance: .8,
-            textOutPut: "nothing happened" 
+            chance: .999,
+            textOutPut: "nothing happened." 
         }
 
-        var possibleEvents = [redWelts, unvaccinatedDeath, nothingHappened];
-
+        var possibleEvents = [redWelts, skinBurn, feverChills, headache, unvaccinatedDeath, nothingHappened];
+        var eventsBelowOurRandomNumber
         function userClick(){
-            buttonNumber = randomNumberGenerator(buttonNumber);
+            buttonNumber = randomNumberGenerator();
             covidDeath = userClickCounterTextGenerator();
+            setLeastLikelyEvent();
+            //console.log(possibleEvents[0].chance);
+            //console.log(possibleEvents.length);
+        }
 
-            if (buttonNumber < .002){
-                //console.log("after recieving the vaccination you had a rash");
-                placeHolderForResult = "After recieving the vaccination you had red welts on face and lips"
-                placeHolderForResult = resultOfUserClick(placeHolderForResult);
-                return;
-            }
-            if (buttonNumber < .004){
-                placeHolderForResult = "After recieving the vaccination you had a rash"
-                placeHolderForResult = resultOfUserClick(placeHolderForResult);
-                return;
-            }
-            if (buttonNumber < .011){
-                placeHolderForResult = "After recieving the vaccination you had a swollen armpit glands"
-                placeHolderForResult = resultOfUserClick(placeHolderForResult);
-                return;
-            }
-            if (buttonNumber < .125){
-                placeHolderForResult = "You passed away as a fully vaccinated indvidual"
-                placeHolderForResult = resultOfUserClick(placeHolderForResult);
-                return;
-            }
-            if (buttonNumber < .304){
-                placeHolderForResult = "You passed away as an unvaccinated indvidual"
-                placeHolderForResult = resultOfUserClick(placeHolderForResult);
-                return;
-            }
-            else {
-                placeHolderForResult = "nothing happened"
-                placeHolderForResult = resultOfUserClick(placeHolderForResult);
-                //console.log("nothing happened");
-                //nothingHappened = "nothing happened"
-            }
-        }   
         
         function resultOfUserClick(textBoxContent){
             //console.log(textBoxContent);
             const element = document.getElementById("textBox");
             element.innerHTML = textBoxContent;
 
+            if (textBoxContent === "You passed away as an unvaccinated indvidual."){
+                deathCount = deathCount + 1;
+                console.log("times you died " ,deathCount);
+                const element = document.getElementById("timesYouDied");
+                element.innerHTML ="Times you died: " + deathCount;
+                return;
+            }
+            if (textBoxContent === "After recieving the vaccination you had a slight headache." || textBoxContent === "After recieving the vaccination you had fever and chills."){
+                slightReaction = slightReaction + 1;
+                console.log("times you had a slight reaction " ,slightReaction);
+                const element = document.getElementById("timesSlightReaction");
+                element.innerHTML ="Slighht reactions: " + slightReaction;
+                return;
+            }
+            if (textBoxContent === "After recieving the vaccination you had a burning sensation, this is considered a serious reaction." || textBoxContent === "After recieving the vaccination you had red welts on face and lips, this is considered a serious reaction."){
+                seriousReaction = seriousReaction + 1;
+                const element = document.getElementById("timesSeriousReaction");
+                element.innerHTML ="Serious reactions: " + seriousReaction;
+            }
+            else{
+                nothingCount = nothingCount + 1;
+                console.log("times nothing happened ",nothingCount);
+                const element = document.getElementById("timesNothingHappened");
+                element.innerHTML ="Times nothing happened: " + nothingCount;
+                return; 
+            }
         }
 
+        function setLeastLikelyEvent(){
+            for (let i = 0; i < possibleEvents.length; i++) {
+                
+                if (buttonNumber < possibleEvents[i].chance){
+                    //console.log(possibleEvents[i].textOutPut);
+                    resultOfUserClick(possibleEvents[i].textOutPut);
+                    break;
+                }
+            }
+        }  
+
+        
         function userClickCounterTextGenerator(){
             clickCount= clickCount + 1;
             const element = document.getElementById("userNumberOfClicks");
             element.innerHTML = clickCount;
-            console.log("you have clicked " + clickCount);
-            console.log("your random number is " + buttonNumber);
+           // console.log("you have clicked " + clickCount);
+            //console.log("your random number is " + buttonNumber);
+        }
+
+        function randomNumberGenerator(){
+            var threeDecimal = 1000; 
+            return Math.floor(Math.random() * ( 1 * threeDecimal)) / (1*threeDecimal);        
+        } 
+
+        function runTest(){
+            for(let i = 0; i < 999; i++){
+                userClick();
+            }
 
         }
 
-        function randomNumberGenerator(generatedNumber){
-
-            var threeDecimal = 1000; 
-            var generatedNumber = Math.floor(Math.random() * ( 1 * threeDecimal)) / (1*threeDecimal);
-            //generatedNumber = Math.floor(Math.random() * 1000000000000) + 1;
-        
-
-            return generatedNumber;
-               
-        } 
-
+        /*var a = ""
+        console.log(1,a)
+        function foo(a){
+            console.log(2,a);
+            a=2;
+            console.log(3,a);
+        }
+        foo();
+        console.log(4,a);  per patrick I should look up "hoisting." 
+        I looked up hoisting... javascript is frustating*/
         //buttonNumber = randomNumberGenerator(buttonNumber)
         //console.log(buttonNumber);
     </script>
